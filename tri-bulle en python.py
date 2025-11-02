@@ -20,7 +20,7 @@ def tribuile(n):
     while p == True:
         p = False
         for i in range(n - 1):
-            if t[i] > t[i + 1]:
+            if t[i] > t[i + 1]: #ordre croissante
                 aux = t[i + 1]
                 t[i + 1] = t[i]
                 t[i] = aux
@@ -37,6 +37,7 @@ affiche(t, n)
 t = tribuile(n) 
 print('tableau finale: après le tri')
 affiche(t, n)
+
 
 
 
