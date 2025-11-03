@@ -15,7 +15,7 @@ def affiche(t, n):
     for i in range(n):
         print(t[i], end="/")
 
-def tribuile(n): 
+def tribulle(n): 
     p = True
     while p == True:
         p = False
@@ -34,9 +34,10 @@ t = array([int] * n) #tableau t est de type entier
 t = remplir(n)
 print('tableau finale: avant le tri')
 affiche(t, n)
-t = tribuile(n) 
+t = tribulle(n) 
 print('tableau finale: après le tri')
 affiche(t, n)
+
 
 
 
