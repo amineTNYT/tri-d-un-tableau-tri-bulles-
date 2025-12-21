@@ -13,7 +13,7 @@ def remplir(n):
 
 def affiche(t, n):
     for i in range(n):
-        print(t[i], end="/")
+        print(t[i], end="|")
 
 def tribulle(n): 
     p = True
@@ -37,6 +37,7 @@ affiche(t, n)
 t = tribulle(n) 
 print('tableau finale: après le tri')
 affiche(t, n)
+
 
 
 
