@@ -41,5 +41,3 @@ Pour étudier et maîtriser le tri à bulles, voici les 3 fichiers essentiels :
 > **Astuce** : Ouvrez `tri bulle.html` dans votre navigateur et projetez-le en classe pour une démonstration interactive captivante !
 
 ---
-
-**Créé par Amine** · GitHub : [@AmineTNYT](https://github.com/AmineTNYT)
