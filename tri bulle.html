@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tri à Bulles - Animation Éducative</title>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f0f0f0;
+        color: #222;
+        padding: 20px;
+        padding-bottom: 100px;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    h1 { 
+        text-align: center;
+        color: #1a1a1a;
+        margin-bottom: 30px;
+        font-size: 36px;
+    }
+
+    .control-panel {
+        background: white;
+        padding: 25px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        margin-bottom: 30px;
+    }
+
+    .buttons {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+
+    button {
+        padding: 12px 24px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        border: none;
+        border-radius: 6px;
+        transition: all 0.3s;
+        color: white;
+    }
+
+    #startBtn {
+        background: #2563eb;
+    }
+    #startBtn:hover:not(:disabled) {
+        background: #1d4ed8;
+    }
+
+    #generateBtn {
+        background: #059669;
+    }
+    #generateBtn:hover:not(:disabled) {
+        background: #047857;
+    }
+
+    #speedBtn {
+        background: #7c3aed;
+    }
+    #speedBtn:hover:not(:disabled) {
+        background: #6d28d9;
+    }
+
+    button:disabled {
+        background: #9ca3af;
+        cursor: not-allowed;
+        opacity: 0.6;
+    }
+
+    .array-display {
+        background: white;
+        padding: 40px 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        margin-bottom: 30px;
+        min-height: 200px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+    }
+
+    .array-container {
+        display: flex;
+        gap: 15px;
+        align-items: flex-end;
+    }
+
+    .array-element {
+        width: 70px;
+        height: 70px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        font-weight: bold;
+        border-radius: 8px;
+        transition: all 0.4s ease;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        color: white;
+        position: relative;
+    }
+
+    .default {
+        background: #64748b;
+    }
+
+    .comparing {
+        background: #f59e0b;
+        transform: scale(1.15);
+    }
+
+    .swapping {
+        background: #ef4444;
+        transform: scale(1.2);
+        animation: pulse 1s infinite;
+    }
+
+    .swapped {
+        background: #10b981;
+        transform: scale(1.1);
+    }
+
+    .sorted {
+        background: #10b981;
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1.1); }
+        50% { transform: scale(1.25); }
+        100% { transform: scale(1.1); }
+    }
+
+    .arrow {
+        position: absolute;
+        top: -40px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 32px;
+        color: #ef4444;
+        animation: bounce 1.5s infinite;
+    }
+
+    @keyframes bounce {
+        0%, 100% { transform: translateX(-50%) translateY(0); }
+        50% { transform: translateX(-50%) translateY(-10px); }
+    }
+
+    #steps {
+        margin: 30px 10px;
+        max-width: 95%;
+        font-size: 18px;
+        min-height: 80px;
+        padding: 20px;
+        background: rgba(255,255,255,0.95);
+        border-radius: 12px;
+        color: #2c3e50;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        line-height: 1.6;
+    }
+
+    .status-panel {
+        background: white;
+        padding: 25px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        margin-bottom: 30px;
+    }
+
+    .status-panel h3 {
+        color: #1a1a1a;
+        margin-bottom: 15px;
+        font-size: 20px;
+        text-align: center;
+    }
+
+    .status-info {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .info-item {
+        background: #f9fafb;
+        padding: 12px;
+        border-radius: 6px;
+        border-left: 4px solid #2563eb;
+        text-align: center;
+    }
+
+    .info-label {
+        font-weight: 600;
+        color: #374151;
+        font-size: 14px;
+    }
+
+    .info-value {
+        font-size: 24px;
+        color: #1a1a1a;
+        font-weight: bold;
+        margin-top: 5px;
+    }
+
+    .code-section {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+        gap: 30px;
+        margin-bottom: 30px;
+    }
+
+    .code-block {
+        background: #1e293b;
+        padding: 25px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+
+    .code-block h3 {
+        color: #fbbf24;
+        margin-bottom: 20px;
+        font-size: 20px;
+        text-align: center;
+    }
+
+    .code-block pre {
+        color: #e2e8f0;
+        font-family: 'Courier New', monospace;
+        font-size: 15px;
+        line-height: 1.6;
+        overflow-x: auto;
+    }
+
+    /* Syntax highlighting colors */
+    .keyword { color: #c084fc; font-weight: bold; }
+    .function { color: #60a5fa; }
+    .string { color: #34d399; }
+    .comment { color: #6b7280; font-style: italic; }
+    .number { color: #fbbf24; }
+    .variable { color: #f472b6; }
+    .operator { color: #fb923c; }
+
+    .tdol-table {
+        background: white;
+        padding: 25px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        margin-bottom: 30px;
+    }
+
+    .tdol-table h3 {
+        color: #1a1a1a;
+        margin-bottom: 20px;
+        text-align: center;
+        font-size: 22px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+
+    th, td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 2px solid #e5e7eb;
+    }
+
+    th {
+        background: #374151;
+        color: white;
+        font-weight: 600;
+    }
+
+    td {
+        background: #f9fafb;
+        color: #1a1a1a;
+    }
+
+    tr:last-child td {
+        border-bottom: none;
+    }
+
+    .watermark {
+        position: fixed;
+        bottom: 15px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+        color: white;
+        padding: 15px 30px;
+        border-radius: 10px;
+        font-size: 16px;
+        font-weight: 600;
+        z-index: 1000;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        border: 2px solid #10b981;
+    }
+
+    .watermark a {
+        color: #10b981;
+        text-decoration: none;
+        font-weight: bold;
+        transition: color 0.3s;
+    }
+
+    .watermark a:hover {
+        color: #34d399;
+        text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+        .code-section {
+            grid-template-columns: 1fr;
+        }
+        
+        .array-element {
+            width: 55px;
+            height: 55px;
+            font-size: 20px;
+        }
+        
+        h1 {
+            font-size: 28px;
+        }
+        
+        .watermark {
+            font-size: 14px;
+            padding: 12px 20px;
+        }
+        
+        .arrow {
+            top: -35px;
+            font-size: 28px;
+        }
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Tri à Bulles (Bubble Sort)</h1>
+
+    <div class="control-panel">
+        <div class="buttons">
+            <button id="startBtn">Démarrer l'Animation</button>
+            <button id="generateBtn">Générer Nouvel Exemple</button>
+            <button id="speedBtn">Vitesse: Lent (×1)</button>
+        </div>
+    </div>
+
+    <div class="array-display">
+        <div class="array-container" id="arrayContainer"></div>
+    </div>
+
+    <div id="steps">Cliquez sur le bouton pour commencer l'animation.</div>
+
+    <div class="status-panel">
+        <h3>État de l'Animation</h3>
+        <div class="status-info">
+            <div class="info-item">
+                <div class="info-label">Passage</div>
+                <div class="info-value" id="passNum">0</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Comparaisons</div>
+                <div class="info-value" id="comparisons">0</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Échanges</div>
+                <div class="info-value" id="swaps">0</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Permut</div>
+                <div class="info-value" id="permutStatus">-</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="code-section">
+        <div class="code-block">
+            <h3>📋 Algorithme</h3>
+            <pre><span class="keyword">procédure</span> <span class="function">tri_bulle</span> (<span class="operator">@</span> T:tab ; n:entier)
+<span class="keyword">Début</span>
+    <span class="keyword">Répéter</span>
+        permut <span class="operator">←</span> <span class="keyword">Faux</span>
+        <span class="keyword">Pour</span> i <span class="keyword">de</span> <span class="number">0</span> <span class="keyword">à</span> n<span class="operator">-</span><span class="number">2</span> <span class="keyword">faire</span>
+            <span class="keyword">Si</span> T[i] <span class="operator">></span> T[i<span class="operator">+</span><span class="number">1</span>] <span class="keyword">alors</span>
+                aux <span class="operator">←</span> T[i]
+                T[i] <span class="operator">←</span> T[i<span class="operator">+</span><span class="number">1</span>]
+                T[i<span class="operator">+</span><span class="number">1</span>] <span class="operator">←</span> aux
+                permut <span class="operator">←</span> <span class="keyword">Vrai</span>
+            <span class="keyword">Fin si</span>
+        <span class="keyword">Fin pour</span>
+    <span class="keyword">Jusqu'à</span> (permut <span class="operator">=</span> <span class="keyword">Faux</span>)
+<span class="keyword">Fin</span></pre>
+        </div>
+
+        <div class="code-block">
+            <h3>🐍 Implémentation Python</h3>
+            <pre><span class="keyword">def</span> <span class="function">tri_bulle</span>(t, n):
+    permut <span class="operator">=</span> <span class="keyword">True</span>
+    <span class="keyword">while</span> permut <span class="operator">==</span> <span class="keyword">True</span>:
+        permut <span class="operator">=</span> <span class="keyword">False</span>
+        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="function">range</span>(n<span class="operator">-</span><span class="number">1</span>):
+            <span class="keyword">if</span> t[i] <span class="operator">></span> t[i<span class="operator">+</span><span class="number">1</span>]:
+                aux <span class="operator">=</span> t[i]
+                t[i] <span class="operator">=</span> t[i<span class="operator">+</span><span class="number">1</span>]
+                t[i<span class="operator">+</span><span class="number">1</span>] <span class="operator">=</span> aux
+                permut <span class="operator">=</span> <span class="keyword">True</span>
+
+<span class="comment"># Exemple d'utilisation</span>
+t <span class="operator">=</span> [<span class="number">5</span>, <span class="number">3</span>, <span class="number">8</span>, <span class="number">1</span>, <span class="number">4</span>]
+<span class="function">tri_bulle</span>(t, <span class="number">5</span>)
+<span class="function">print</span>(t)  <span class="comment"># [1, 3, 4, 5, 8]</span></pre>
+        </div>
+    </div>
+
+    <div class="tdol-table">
+        <h3>📊 Tableau TDOL (Types et Déclarations)</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Objet</th>
+                    <th>Nature / Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>i</strong></td>
+                    <td>Entier</td>
+                </tr>
+                <tr>
+                    <td><strong>aux</strong></td>
+                    <td>Entier</td>
+                </tr>
+                <tr>
+                    <td><strong>permut</strong></td>
+                    <td>Booléen</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="watermark">
+    Créé par <strong>Amine</strong> | GitHub: <a href="https://github.com/AmineTNYT" target="_blank">@AmineTNYT</a>
+</div>
+
+<script>
+const arrayContainer = document.getElementById('arrayContainer');
+const startBtn = document.getElementById('startBtn');
+const generateBtn = document.getElementById('generateBtn');
+const speedBtn = document.getElementById('speedBtn');
+const stepsDiv = document.getElementById('steps');
+const passNum = document.getElementById('passNum');
+const comparisons = document.getElementById('comparisons');
+const swaps = document.getElementById('swaps');
+const permutStatus = document.getElementById('permutStatus');
+
+let arr = [];
+let isAnimating = false;
+let currentExample = 'simple';
+
+// Speed settings
+let speedLevel = 1;
+let baseDelay = 1000;
+
+speedBtn.onclick = () => {
+    if (speedLevel === 1) {
+        speedLevel = 2; baseDelay = 500; speedBtn.textContent = "Vitesse: Normal (×2)";
+    } else if (speedLevel === 2) {
+        speedLevel = 4; baseDelay = 250; speedBtn.textContent = "Vitesse: Rapide (×4)";
+    } else {
+        speedLevel = 1; baseDelay = 1000; speedBtn.textContent = "Vitesse: Lent (×1)";
+    }
+};
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms / speedLevel));
+}
+
+function initializeSimpleExample() {
+    arr = [5, 3, 8, 1, 4];
+    currentExample = 'simple';
+    renderArray();
+    resetStats();
+    stepsDiv.innerHTML = "Exemple simple avec 5 éléments : [5, 3, 8, 1, 4]<br>Cliquez sur 'Démarrer l'Animation' pour voir le tri en action.";
+}
+
+function generateRandomArray() {
+    const length = 10;
+    arr = Array.from({length}, () => Math.floor(Math.random() * 90) + 10);
+    currentExample = 'random';
+    renderArray();
+    resetStats();
+    stepsDiv.innerHTML = `Nouvel exemple avec ${length} éléments : [${arr.join(', ')}]<br>Cliquez sur 'Démarrer l'Animation' pour voir le tri.`;
+}
+
+function renderArray() {
+    arrayContainer.innerHTML = '';
+    arr.forEach((val, i) => {
+        const div = document.createElement('div');
+        div.className = 'array-element default';
+        div.id = `elem${i}`;
+        div.textContent = val;
+        arrayContainer.appendChild(div);
+    });
+}
+
+function resetStats() {
+    passNum.textContent = '0';
+    comparisons.textContent = '0';
+    swaps.textContent = '0';
+    permutStatus.textContent = '-';
+    permutStatus.style.color = '#1a1a1a';
+}
+
+function updateElement(index, className) {
+    const elem = document.getElementById(`elem${index}`);
+    elem.className = `array-element ${className}`;
+}
+
+async function bubbleSortAnimation() {
+    if (isAnimating) return;
+    
+    isAnimating = true;
+    startBtn.disabled = true;
+    generateBtn.disabled = true;
+    startBtn.textContent = 'Animation en cours...';
+
+    const n = arr.length;
+    let totalComparisons = 0;
+    let totalSwaps = 0;
+    let pass = 0;
+
+    stepsDiv.innerHTML = "<strong>Tableau initial non trié</strong>";
+    await sleep(3000);
+
+    let swapped;
+    do {
+        pass++;
+        swapped = false;
+        passNum.textContent = pass;
+        permutStatus.textContent = 'Faux';
+        permutStatus.style.color = '#ef4444';
+
+        stepsDiv.innerHTML = `<strong>Passage ${pass}</strong> : Initialisation permut = Faux<br>Début du parcours du tableau`;
+        await sleep(3000);
+
+        for (let i = 0; i < n - 1; i++) {
+            totalComparisons++;
+            comparisons.textContent = totalComparisons;
+
+            // Highlight comparing elements
+            updateElement(i, 'comparing');
+            updateElement(i + 1, 'comparing');
+            
+            // Add arrow to current element being examined
+            const arrow = document.createElement('div');
+            arrow.className = 'arrow';
+            arrow.textContent = '↓';
+            document.getElementById(`elem${i}`).appendChild(arrow);
+
+            stepsDiv.innerHTML = `<strong>Passage ${pass}</strong> : Comparaison des éléments à la position ${i} et ${i+1}<br>${arr[i]} > ${arr[i+1]} ?`;
+            await sleep(3000);
+
+            if (arr[i] > arr[i + 1]) {
+                // Need to swap
+                document.getElementById(`elem${i}`).removeChild(arrow);
+                updateElement(i, 'swapping');
+                updateElement(i + 1, 'swapping');
+                
+                stepsDiv.innerHTML = `<strong>Passage ${pass}</strong> : Échange nécessaire !<br>${arr[i]} > ${arr[i+1]} → Échange requis<br><br>aux ← t[${i}] (${arr[i]})<br>t[${i}] ← t[${i+1}] (${arr[i+1]})<br>t[${i+1}] ← aux<br>permut ← Vrai`;
+                await sleep(4000);
+
+                // Perform swap
+                [arr[i], arr[i + 1]] = [arr[i + 1], arr[i]];
+                document.getElementById(`elem${i}`).textContent = arr[i];
+                document.getElementById(`elem${i + 1}`).textContent = arr[i + 1];
+                
+                // Mark as swapped (green)
+                updateElement(i, 'swapped');
+                updateElement(i + 1, 'swapped');
+                
+                totalSwaps++;
+                swaps.textContent = totalSwaps;
+                swapped = true;
+                permutStatus.textContent = 'Vrai';
+                permutStatus.style.color = '#10b981';
+
+                await sleep(2000);
+                
+                // Reset swapped elements to default
+                updateElement(i, 'default');
+                updateElement(i + 1, 'default');
+            } else {
+                // No swap needed
+                document.getElementById(`elem${i}`).removeChild(arrow);
+                stepsDiv.innerHTML += `<br>→ Non, pas d'échange nécessaire`;
+                await sleep(1600);
+            }
+
+            // Reset to default
+            updateElement(i, 'default');
+            updateElement(i + 1, 'default');
+            
+            if (i === n - 2 && !swapped) {
+                // Last comparison, no swap happened
+                stepsDiv.innerHTML += `<br><br>Aucun échange pendant ce passage → Le tableau est trié !`;
+            }
+        }
+
+        // Mark elements that are in their final position
+        if (!swapped) {
+            for (let i = 0; i < n; i++) {
+                updateElement(i, 'sorted');
+            }
+        } else {
+            // The last element of this pass is in correct position
+            updateElement(n - pass, 'sorted');
+        }
+
+        await sleep(2000);
+    } while (swapped);
+
+    // Mark all as sorted at the end
+    for (let i = 0; i < n; i++) {
+        updateElement(i, 'sorted');
+        await sleep(400);
+    }
+
+    stepsDiv.innerHTML = `<strong>Tri terminé !</strong> Le tableau est complètement trié.<br><br>Résumé : ${pass} passages, ${totalComparisons} comparaisons, ${totalSwaps} échanges`;
+
+    isAnimating = false;
+    startBtn.disabled = false;
+    generateBtn.disabled = false;
+    startBtn.textContent = 'Démarrer l\'Animation';
+}
+
+generateBtn.onclick = generateRandomArray;
+startBtn.onclick = bubbleSortAnimation;
+
+// Initialize with simple example
+initializeSimpleExample();
+</script>
+
+</body>
+</html>
