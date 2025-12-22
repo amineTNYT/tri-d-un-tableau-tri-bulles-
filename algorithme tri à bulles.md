@@ -1,6 +1,6 @@
 #                                                                                     ALGORITHME TRI BULLE
 
-## boucle repeter jusqu'à
+## 1️⃣ Tri à bulles — Boucle « Répéter … Jusqu’à »
 ```
 Procédure tri_bulle (@ T : tab ; n : entier)
 Début
@@ -30,7 +30,7 @@ permut   | Booléen
 
 
 
-# tri_bulle boucle tanque
+# 2️⃣ Tri à bulles — Boucle « Tant que »
 ```
 Procédure Tribulles (@ T : Tab ; n : entier)
 Début
