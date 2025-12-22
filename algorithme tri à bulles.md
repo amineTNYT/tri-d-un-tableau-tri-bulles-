@@ -1,5 +1,5 @@
 #                                                                                     ALGORITHME TRI BULLE
----
+
 ## boucle repeter jusqu'à
 ```
 Procédure tri_bulle (@ T : tab ; n : entier)
@@ -16,7 +16,8 @@ Début
         Fin Pour
     Jusqu’à (permut = Faux)
 Fin
-
+```
+```
   ###    TDOL
 Objet    | Type / Nature
 -----------------------
@@ -50,12 +51,14 @@ Début
     Fin tant que
 Fin
 ```
+
+```
 #      TDOL
 
 Objets     | Type / Nature
 -------------------------
 permut     | Booléen
 i, aux     | Entier
-
+```
 <img width="977" height="707" alt="Capture d’écran 2025-12-14 110920" src="https://github.com/user-attachments/assets/22997cc7-8faf-4634-882e-7f198d8120ee" />
 
